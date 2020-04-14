@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="ProductList"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="ProductList"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="ProductList"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+    <xsd:documentation></xsd:documentation>
+
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="ProductList">
+            <xsd:complexType name="product">
+                <xsd:sequence>
+                    <xsd:element name="id" type="tns:integer"></xsd:element>
+                    <xsd:element name="name" type="xsd:string"></xsd:element>
+                    <xsd:element name="price" type="xsd:string"></xsd:element>
+                    <xsd:element name="amount" type="tns:integer"></xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="productInfoRequest">
+        <wsdl:part name="id" type="tns:integer"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="productInfoResponse">
+        <wsdl:part name="product" type="tns:product"></wsdl:part>
+    </wsdl:message>
+
+    <wsdl:portType name="ProductList">
+        <wsdl:operation name="productInfo">
+            <wsdl:input message="tns:productInfoRequest"/>
+            <wsdl:output message="tns:productInfoResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="ProductList" type="tns:ProductList">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="productInfo">
+            <soap:operation soapAction="http://localhost/server.php"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="ProductList"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="ProductList"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ProductList">
+        <wsdl:port binding="tns:ProductList" name="StoreProductList">
+            <soap:address location="http://localhost/server.php"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

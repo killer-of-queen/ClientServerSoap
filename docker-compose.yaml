@@ -1,0 +1,46 @@
+version: '3'
+services:
+  # in case Apache's modrewrite does not work,
+  # run the following commands to reactivate it:
+  #
+  # sudo docker exec -it onlinestore_php_1 /bin/bash
+  # a2enmod rewrite
+  # service apache2 reload && /bin/bash
+  #
+  php:
+    image: php:7.4-apache
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www
+
+  # to install dependencies:
+  # sudo docker exec -it onlinestore_composer_1 /bin/bash
+  # composer require <vendor>/<package>
+  #
+  # or to install from composer.lock:
+  # composer install
+  composer:
+    image: composer
+    tty: true
+    command: /bin/sh
+    volumes:
+      - ./:/app
+
+  database:
+    image: mariadb:10.3
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: qwerty
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - database:db
+    ports:
+      - 8765:80
+    environment:
+      MYSQL_ROOT_PASSWORD: qwerty
+    depends_on:
+      - database
